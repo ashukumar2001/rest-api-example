@@ -1,4 +1,5 @@
 import Joi from "joi";
+import CustomErrorHandler from "../services/CustomErrorHandler.js";
 const registerController = {
   register(req, res, next) {
     // Request Validation
@@ -16,6 +17,15 @@ const registerController = {
 
     const { error } = registerValidationSchema.validate(req.body);
     if (error) {
+      return next(error);
+    }
+    // checking if user already exists
+    try {
+      const existingUser = true;
+      if (existingUser) {
+        return next(CustomErrorHandler.alreadyExist("Email already exists"));
+      }
+    } catch (error) {
       return next(error);
     }
     res.send({
